@@ -1,6 +1,6 @@
 ﻿namespace SatelliteTracker.Backend
 {
-    public class Class1
+    public class FileHandler
     {
     }
 }

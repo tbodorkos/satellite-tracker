@@ -3,7 +3,7 @@
 namespace SatelliteTracker.Backend.Test
 {
     [TestClass]
-    public class UnitTest1
+    public class FileHandlerUnitTest
     {
         [TestMethod]
         public void TestMethod1()
