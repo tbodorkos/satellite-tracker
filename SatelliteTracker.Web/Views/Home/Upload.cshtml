@@ -1,6 +1,33 @@
 ﻿@{
-    ViewBag.Title = "Upload";
+    ViewBag.Title = "Select file to upload";
 }
 
-<h2>Upload</h2>
+<button class="btn btn-default br-0" data-toggle="collapse" data-target="#uploadCollapse">Upload NMEA file</button>
+
+<div id="uploadCollapse" class="collapse">
+    <br />
+    <h4>@ViewBag.Title</h4>
+
+    @using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { id = "uploadForm", enctype = "multipart/form-data" }))
+    {
+        <div class="input-group mb-10">
+            <label class="input-group-btn">
+                <span class="btn btn-primary mr-n5">
+                    Browse… <input type="file" id="file" name="file" accept=".nmea" style="display: none;" multiple>
+                </span>
+            </label>
+            <input type="text" id="showFileName" class="form-control" readonly placeholder="Upload .nmea file">
+        </div>
+        <div class="right">
+            <input type="submit" value="Upload" id="uploadButton" class="btn btn-success br-0" />
+        </div>
+
+        <script>
+
+        </script>
+    }
+</div>
+
+<script src="~/Scripts/upload.js"></script>
+
 

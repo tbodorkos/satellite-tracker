@@ -21,11 +21,19 @@ namespace SatelliteTracker.Web
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
+                      "~/Scripts/sweetalert.js",
                       "~/Scripts/respond.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/openlayers").Include(
+                      "~/Scripts/ol.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/sweetalert.css",
                       "~/Content/site.css"));
+
+            bundles.Add(new StyleBundle("~/Content/openlayers").Include(
+                      "~/Content/ol.css"));
         }
     }
 }
