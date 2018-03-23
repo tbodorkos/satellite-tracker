@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SatelliteTracker.Backend
+namespace SatelliteTracker.Backend.Entites
 {
     public class SatelliteEntity
     {
