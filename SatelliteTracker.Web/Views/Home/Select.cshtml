@@ -1,5 +1,6 @@
-﻿@{
-    ViewBag.Title = "Select file to show on map";
+﻿@model SatelliteTracker.Web.Models.MapModel
+@{
+    ViewBag.Title = "Select a file to show on map";
 }
 
 <button class="btn btn-default br-0" data-toggle="collapse" data-target="#selectCollapse">Select NMEA file</button>
@@ -7,13 +8,21 @@
 <div id="selectCollapse" class="collapse">
     <br />
     <h4>@ViewBag.Title</h4>
-    <div class="form-group">
-        <select class="form-control" id="select">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-        </select>
-    </div>
+    @using (Html.BeginForm("Select", "Home", FormMethod.Post, new { id = "selectForm" }))
+    {
+        <div class="form-group">
+            <select class="form-control" id="fileSelector" name="fileName">
+                <option disabled selected></option>
+                @foreach (String file in Model.Files)
+                {
+                    <option>@file</option>
+                }
+            </select>
+        </div>
+        <div class="right">
+            <input type="submit" value="Show" id="showButton" class="btn btn-success br-0" />
+        </div>
+    }
 </div>
 
+<script type="text/javascript" src="~/Scripts/select.js"></script>

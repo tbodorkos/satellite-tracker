@@ -1,6 +1,32 @@
-﻿@{
+﻿@model SatelliteTracker.Web.Models.MapModel
+@{
     ViewBag.Title = "Map";
 }
 
-<h2>Map</h2>
+@Styles.Render("~/Content/openlayers")
+@Scripts.Render("~/bundles/openlayers")
 
+<div class="col-lg-8 mb-10">
+    <div id="selectDiv" class="col-md-12 card">
+        @Html.Partial("Select", Model)
+    </div>
+</div>
+<div class="col-lg-4 mb-10">
+    <div id="uploadDiv" class="col-md-12 card">
+        @Html.Partial("Upload")
+    </div>
+</div>
+<div class="col-lg-8 mb-10">
+    <div id="mapDiv" class="col-md-12 card">
+        <div id="map" class="map">
+            <div id="mapTooltip"></div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-4">
+    <div id="dataDiv" class="col-md-12 card">
+        @Html.Partial("Data")
+    </div>
+</div>
+
+<script type="text/javascript" src="~/Scripts/map.js"></script>
