@@ -8,7 +8,7 @@ namespace SatelliteTracker.Backend
 {
     public static class DataProvider
     {
-        private static List<SatelliteData> Data = new List<SatelliteData>()
+        private static IList<SatelliteData> Data = new List<SatelliteData>()
         {
             new SatelliteData() { PRN = "05", Name = "USA-206", Launch = DateTime.Parse("2011-07-16 06:41") },
             new SatelliteData() { PRN = "30", Name = "USA-248", Launch = DateTime.Parse("2014-02-21 01:59") }
