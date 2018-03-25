@@ -20,7 +20,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="/" ><img class="navbar-logo" src="~/Images/satellite.png" onmouseover="this.src='/Images/satellite_hover.png';" onmouseout="this.src = '/Images/satellite.png';" /> </a>
+                <a href="/"><img class="navbar-logo" src="~/Images/satellite.png" onmouseover="this.src='/Images/satellite_hover.png';" onmouseout="this.src = '/Images/satellite.png';" /> </a>
                 @Html.ActionLink("Satellite Tracker", "Index", "Home", new { area = "" }, new { @class = "navbar-brand m-0" })
             </div>
             <div class="navbar-collapse">
@@ -31,11 +31,14 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid body-content">
+    <div class="row ml-0 mr-0">
         @RenderBody()
-        @*<footer class="col-lg-12 mt-10">
-            <p class="col-md-12 card m-0">&copy; @DateTime.Now.Year - Satellite Tracker</p>
-        </footer>*@
     </div>
+    <br />
+    <footer>
+        <p class="col-md-12">
+            &copy; @DateTime.Now.Year - Satellite Tracker
+        </p>
+    </footer>
 </body>
 </html>

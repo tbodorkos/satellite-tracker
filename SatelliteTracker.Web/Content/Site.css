@@ -2,22 +2,19 @@
     padding-top: 50px;
     padding-bottom: 20px;
     background-color: #f5f5f5;
+    -ms-overflow-style: none;
 }
 
-/* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    padding-top: 20px;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
 .dl-horizontal dt {
     white-space: normal;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
 textarea {
@@ -47,12 +44,24 @@ textarea {
     margin: 0 !important;
 }
 
+.mt-5 {
+    margin-top: 5px;
+}
+
 .mt-10 {
     margin-top: 10px;
 }
 
 .mb-10 {
     margin-bottom: 10px;
+}
+
+.ml-0 {
+    margin-left: 0;
+}
+
+.mr-0 {
+    margin-right: 0;
 }
 
 .mr-10 {
@@ -63,8 +72,20 @@ textarea {
     margin-right: -5px;
 }
 
-.body-content {
-    padding-top: 20px;
+.ml-10 {
+    margin-left: 10px;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.c-black {
+    color: black;
+}
+
+.d-none {
+    display: none;
 }
 
 .card {
@@ -89,6 +110,27 @@ textarea {
     display: none;
 }
 
-body {
-    -ms-overflow-style: none;
+.underline {
+    text-decoration: underline;
+}
+
+.size-13 {
+    font-size: 13px;
+}
+
+.size-16 {
+    font-size: 16px;
+}
+
+#mapTooltip {
+    height: 30px;
+    width: 80px;
+    padding-top: 5px;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 3px;
+    z-index: 99999;
 }
