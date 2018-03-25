@@ -1,19 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
+
+using SatelliteTracker.Backend.Entites;
 
 namespace SatelliteTracker.Backend
 {
     public static class NMEAParser
     {
-        private static string sentence = "$GPGSV";
+        private static String sentence = "$GPGSV";
 
-        public static List<SatelliteEntity> Parse(List<string> lines)
+        public static List<SatelliteEntity> Parse(List<String> lines)
         {
-            string[] lineElements;
+            String[] lineElements;
             List<SatelliteEntity> entityList = new List<SatelliteEntity>();
 
-            foreach(string line in lines)
+            foreach(String line in lines)
             {
                 lineElements = line.Split('*').First().Split(',');
                 if(lineElements[0] != sentence)
@@ -44,9 +46,15 @@ namespace SatelliteTracker.Backend
             return entityList;
         }
 
-        private static Int32 ParseToInt(string str)
+        public static Coordinates GetCoordinates(String str)
         {
-            return Int32.TryParse(str, out int num) ? num : -1;
+            string[] coordinates = str.Split(';');
+            return new Coordinates(coordinates[0], coordinates[1]);
+        }
+
+        private static Int32 ParseToInt(String str)
+        {
+            return Int32.TryParse(str, out Int32 num) ? num : -1;
         }
     }
 }
