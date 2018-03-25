@@ -3,13 +3,9 @@
 });
 
 $("#uploadForm").submit(function (e) {
-    // Prevent the default behavior
     e.preventDefault();
-
-    // Serialize your form
     var formData = new FormData($(this)[0]);
 
-    // Make your POST
     $.ajax({
         type: 'POST',
         url: "/Upload",
@@ -18,7 +14,8 @@ $("#uploadForm").submit(function (e) {
         contentType: false,
         processData: false,
         success: function (view) {
-            swal("Upload completed successfully!", "", "success")
-        },
+            swal("Upload completed successfully!", "", "success");
+            $("#uploadCollapseButton").click();
+        }
     });
 });
