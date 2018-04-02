@@ -15,7 +15,32 @@ $("#uploadForm").submit(function (e) {
         processData: false,
         success: function (view) {
             swal("Upload completed successfully!", "", "success");
+            $("#showFileName").val("");
             $("#uploadCollapseButton").click();
+            addFileToSelect();
         }
     });
 });
+
+function addFileToSelect() {
+    var $fileInput = $(":file"),
+        files,
+        fileName,
+        pointIndex,
+        option;
+
+    if (typeof $fileInput !== "undefined" && typeof $fileInput[0] !== "undefined") {
+        files = $fileInput[0].files;
+        if (typeof files !== "undefined" && files.length > 0) {
+            fileName = files[0].name;
+            pointIndex = fileName.lastIndexOf(".");
+            if (pointIndex !== -1) {
+                fileName = fileName.substring(0, pointIndex);
+                option = document.createElement('option');
+                option.value = fileName;
+                option.text = fileName;
+                $("#fileSelector")[0].appendChild(option);
+            }
+        }
+    }
+}
