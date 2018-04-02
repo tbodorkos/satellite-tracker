@@ -8,25 +8,25 @@ namespace SatelliteTracker.Backend
 {
     public static class NMEAParser
     {
-        private static String sentence = "$GPGSV";
+        private static String Sentence = "$GPGSV";
 
         public static List<SatelliteEntity> Parse(List<String> lines)
         {
             String[] lineElements;
             List<SatelliteEntity> entityList = new List<SatelliteEntity>();
 
-            foreach(String line in lines)
+            foreach (String line in lines)
             {
                 lineElements = line.Split('*').First().Split(',');
-                if(lineElements[0] != sentence)
+                if (lineElements[0] != Sentence)
                 {
                     continue;
                 }
 
                 var index = 4;
-                while(index < lineElements.Length)
+                while (index < lineElements.Length)
                 {
-                    if(String.IsNullOrEmpty(lineElements[index]))
+                    if (String.IsNullOrEmpty(lineElements[index]))
                     {
                         index += 3;
                     }

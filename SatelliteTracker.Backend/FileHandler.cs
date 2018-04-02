@@ -25,8 +25,7 @@ namespace SatelliteTracker.Backend
         {
             List<String> fileNameList = new List<String>();
 
-            String[] fileNameArray = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory
-                + "UploadedFiles\\", "*.nmea");
+            String[] fileNameArray = Directory.GetFiles(Path, "*" + Ext);
 
             foreach (String fileName in fileNameArray)
             {

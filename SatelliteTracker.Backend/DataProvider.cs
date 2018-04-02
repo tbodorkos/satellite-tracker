@@ -41,13 +41,6 @@ namespace SatelliteTracker.Backend
             new SatelliteData() { PRN = "30", Name = "USA-248", System = SystemType.GPS, Launch = DateTime.Parse("2014-02-21 01:59") },
             new SatelliteData() { PRN = "31", Name = "USA-190", System = SystemType.GPS, Launch = DateTime.Parse("2006-09-25 18:50") },
             new SatelliteData() { PRN = "32", Name = "USA-266", System = SystemType.GPS, Launch = DateTime.Parse("2016-02-05 13:38") },
-            
-            //new SatelliteData() { PRN = "", Name = "", System = SystemType.GPS, Launch = DateTime.Parse("") },
-            //new SatelliteData() { PRN = "", Name = "", System = SystemType.GPS, Launch = DateTime.Parse("") },
-            //new SatelliteData() { PRN = "", Name = "", System = SystemType.GPS, Launch = DateTime.Parse("") },
-            //new SatelliteData() { PRN = "", Name = "", System = SystemType.GPS, Launch = DateTime.Parse("") },
-            //new SatelliteData() { PRN = "", Name = "", System = SystemType.GPS, Launch = DateTime.Parse("") },
-            //new SatelliteData() { PRN = "", Name = "", System = SystemType.GPS, Launch = DateTime.Parse("") },
         };
 
         public static String GetDataByPRN(String prn)
