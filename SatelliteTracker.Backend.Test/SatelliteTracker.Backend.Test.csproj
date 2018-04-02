@@ -51,9 +51,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataProviderUnitTest.cs" />
     <Compile Include="NMEAParserUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="FileHandlerUnitTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
