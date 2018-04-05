@@ -8,48 +8,91 @@ namespace SatelliteTracker.Backend
 {
     public static class NMEAParser
     {
-        private static String Sentence = "$GPGSV";
+        private static String SatelliteSentence = "$GPGSV";
+        private static String PositionSentence = "$GPGGA";
 
-        public static List<SatelliteEntity> Parse(List<String> lines)
+        public static KeyValuePair<List<SatelliteEntity>, List<Coordinates>> Parse(List<String> lines)
         {
             String[] lineElements;
-            List<SatelliteEntity> entityList = new List<SatelliteEntity>();
+            String lineType;
+
+            List<SatelliteEntity> satelliteEntityList = null;
+            List<Coordinates> userCoordinatesList = null;
 
             foreach (String line in lines)
             {
                 lineElements = line.Split('*').First().Split(',');
-                if (lineElements[0] != Sentence)
+                lineType = lineElements[0];
+
+                if (lineType != SatelliteSentence && lineType != PositionSentence)
                 {
                     continue;
                 }
-
-                var index = 4;
-                while (index < lineElements.Length)
+                else if (lineType == PositionSentence)
                 {
-                    if (String.IsNullOrEmpty(lineElements[index]))
-                    {
-                        index += 3;
-                    }
-                    else
-                    {
-                        entityList.Add(new SatelliteEntity()
-                        {
-                            PRN = lineElements[index++],
-                            Elevation = ParseToInt(lineElements[index++]),
-                            Azimuth = ParseToInt(lineElements[index++]),
-                            SNR = ParseToInt(lineElements[index++])
-                        });
-                    }
+                    userCoordinatesList = GetUserCoordinates(lineElements);
+
+                }
+                else if (lineType == SatelliteSentence)
+                {
+                    satelliteEntityList = GetSatelliteEntities(lineElements);
                 }
             }
 
-            return entityList;
+            return new KeyValuePair<List<SatelliteEntity>, List<Coordinates>>(
+                satelliteEntityList,
+                userCoordinatesList
+                );
         }
 
-        public static Coordinates GetCoordinates(String str)
+        private static List<SatelliteEntity> GetSatelliteEntities(string[] lineElements)
         {
-            string[] coordinates = str.Split(';');
-            return new Coordinates(coordinates[0], coordinates[1]);
+            var satelliteEntityList = new List<SatelliteEntity>();
+            var index = 4;
+
+            while (index < lineElements.Length)
+            {
+                if (String.IsNullOrEmpty(lineElements[index]))
+                {
+                    index += 3;
+                }
+                else
+                {
+                    satelliteEntityList.Add(new SatelliteEntity()
+                    {
+                        PRN = lineElements[index++],
+                        Elevation = ParseToInt(lineElements[index++]),
+                        Azimuth = ParseToInt(lineElements[index++]),
+                        SNR = ParseToInt(lineElements[index++])
+                    });
+                }
+            }
+
+            return satelliteEntityList;
+        }
+
+        private static List<Coordinates> GetUserCoordinates(String[] lineElements)
+        {
+            var coordinates = new List<Coordinates>();
+            var index = 2;
+
+            var latitude = lineElements[index++];
+            var longitude = lineElements[++index];
+
+            if (!String.IsNullOrEmpty(latitude) && !String.IsNullOrEmpty(longitude))
+            {
+                coordinates.Add(FormatToCoordinate(latitude, longitude));
+            }
+
+            return coordinates;
+        }
+
+        private static Coordinates FormatToCoordinate(String latitude, String longitude)
+        {
+            return new Coordinates(
+                new String(latitude.Where(x => Char.IsLetterOrDigit(x)).ToArray()).Insert(2, "."),
+                new String(longitude.Where(x => Char.IsLetterOrDigit(x)).ToArray()).Insert(3, ".")
+                );
         }
 
         private static Int32 ParseToInt(String str)

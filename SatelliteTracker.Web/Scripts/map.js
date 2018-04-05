@@ -38,19 +38,22 @@ map.on(['pointermove', 'singleclick'], function (evt) {
 
 function drawOnMap(model) {
     var i = 0,
-        coordinates = model.Coordinates,
+        userCoordinates = model.UserCoordinatesList,
         satellites = model.SatelliteList;
 
-    if (coordinates.length === 0 || satellites.length === 0) {
+    if (userCoordinates.length === 0 || satellites.length === 0) {
         return;
     }
 
     document.getElementById("satelliteList").innerHTML = "";
     $("#zeroSatellite").hide();
 
+    drawUserCoordinates(userCoordinates, colors[0]);
+
     for (i; i < satellites.length; ++i) {
         var satellite = satellites[i],
-            color = colors[i],
+            coordinates = userCoordinates[i],
+            color = colors[i + 1],
             name_id = satellite.Name.replace(/_/g, " ");
 
         drawSatellite(coordinates, satellite, color);
@@ -60,7 +63,18 @@ function drawOnMap(model) {
         "<div id='" + name_id + "' class='satelliteContent c-black d-none mt-5 ml-10 mb-10 size-13'>" + satellite.Information + "</div></li>";
     }
 
-    setMapCenter(coordinates);
+    setMapCenter(userCoordinates[0]);
+}
+
+function drawUserCoordinates(coordinates, color) {
+    var points = [],
+        index = 0;
+
+    for (index; index < coordinates.length; ++index) {
+        points[index] = [coordinates[index].Longitude, coordinates[index].Latitude];
+    }
+
+    addLayerToMap(points, "User route", color);
 }
 
 function drawSatellite(coordinates, satellite, color) {
@@ -89,7 +103,7 @@ function drawSatellite(coordinates, satellite, color) {
         points[index] = [final_longitude, final_latitude];
     }
     
-    addSatelliteToMap(points, satellite.Name, color);
+    addLayerToMap(points, satellite.Name, color);
 }
 
 function toRadian(angle) {
@@ -109,7 +123,7 @@ function setMapCenter(coordinates) {
     map.getView().setZoom(10);
 }
 
-function addSatelliteToMap(points, name, color) {
+function addLayerToMap(points, name, color) {
     for (var i = 0; i < points.length; i++) {
         points[i] = ol.proj.transform(points[i], 'EPSG:4326', 'EPSG:3857');
     }

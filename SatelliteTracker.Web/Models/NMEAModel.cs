@@ -6,7 +6,7 @@ namespace SatelliteTracker.Web.Models
 {
     public class NMEAModel
     {
-        public Coordinates Coordinates { get; set; }
+        public IList<Coordinates> UserCoordinatesList { get; set; }
 
         public IList<SatelliteModel> SatelliteList { get; set; }
     }

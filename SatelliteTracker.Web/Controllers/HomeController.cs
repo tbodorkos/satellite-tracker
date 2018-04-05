@@ -49,10 +49,11 @@ namespace SatelliteTracker.Web.Controllers
             {
                 List<String> lines = FileHandler.Open(fileName);
 
+                var entityList = NMEAParser.Parse(lines);
                 NMEAModel model = new NMEAModel
                 {
-                    Coordinates = NMEAParser.GetCoordinates(lines[0]),
-                    SatelliteList = GetSatelliteList(NMEAParser.Parse(lines))
+                    UserCoordinatesList = entityList.Value,
+                    SatelliteList = GetSatelliteList(entityList.Key),
                 };
 
                 return Json(model);
