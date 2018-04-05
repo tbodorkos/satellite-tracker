@@ -47,13 +47,15 @@ namespace SatelliteTracker.Web.Controllers
         {
             if (!String.IsNullOrEmpty(fileName))
             {
-                List<String> lines = FileHandler.Open(fileName);
+                var lines = FileHandler.Open(fileName);
 
                 var entityList = NMEAParser.Parse(lines);
+                var frequency = GetFrequency(entityList.Value.ToList().Count);
+
                 NMEAModel model = new NMEAModel
                 {
-                    UserCoordinatesList = entityList.Value,
-                    SatelliteList = GetSatelliteList(entityList.Key),
+                    UserCoordinatesList = entityList.Value.Where((x, i) => i % frequency == 0),
+                    SatelliteList = GetSatelliteList(entityList.Key, frequency),
                 };
 
                 return Json(model);
@@ -62,7 +64,12 @@ namespace SatelliteTracker.Web.Controllers
             return Json("");
         }
 
-        public List<SatelliteModel> GetSatelliteList(List<SatelliteEntity> entities)
+        private static Int32 GetFrequency(Int32 count)
+        {
+            return (Int32)((double)count / (double)10);
+        }
+
+        private IEnumerable<SatelliteModel> GetSatelliteList(IEnumerable<SatelliteEntity> entities, Int32 frequency)
         {
             var satelliteElevations = entities.GroupBy(
                 p => p.PRN,
@@ -74,14 +81,15 @@ namespace SatelliteTracker.Web.Controllers
                 p => p.Azimuth,
                 (key, g) => new { PRN = key, AzimuthList = g.ToList() });
 
-            List<SatelliteModel> result = new List<SatelliteModel>();
+            var result = new List<SatelliteModel>();
             foreach (var satelliteElevation in satelliteElevations)
             {
                 result.Add(new SatelliteModel()
                 {
                     Name = DataProvider.GetNameByPRN(satelliteElevation.PRN),
-                    ElevationList = satelliteElevation.ElevationList,
-                    AzimuthList = satelliteAzimuths.FirstOrDefault(a => a.PRN == satelliteElevation.PRN).AzimuthList,
+                    ElevationList = satelliteElevation.ElevationList.Where((x, i) => i % frequency == 0).ToList(),
+                    AzimuthList = satelliteAzimuths.FirstOrDefault(a => a.PRN == satelliteElevation.PRN).
+                        AzimuthList.Where((x, i) => i % frequency == 0).ToList(),
                     Information = DataProvider.GetDataByPRN(satelliteElevation.PRN)
                 });
             }

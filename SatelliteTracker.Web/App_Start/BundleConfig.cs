@@ -25,7 +25,8 @@ namespace SatelliteTracker.Web
                       "~/Scripts/respond.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/openlayers").Include(
-                      "~/Scripts/ol.js"));
+                      "~/Scripts/ol.js",
+                      "~/Scripts/turf.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
