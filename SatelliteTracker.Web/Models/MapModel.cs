@@ -9,6 +9,6 @@ namespace SatelliteTracker.Web.Models
         {
         }
 
-        public IList<String> Files { get; set; }
+        public IEnumerable<String> Files { get; set; }
     }
 }

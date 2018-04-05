@@ -11,13 +11,14 @@ namespace SatelliteTracker.Backend
         private static String SatelliteSentence = "$GPGSV";
         private static String PositionSentence = "$GPGGA";
 
-        public static KeyValuePair<List<SatelliteEntity>, List<Coordinates>> Parse(List<String> lines)
+        public static KeyValuePair<IEnumerable<SatelliteEntity>, IEnumerable<Coordinates>> Parse(
+            IEnumerable<String> lines)
         {
             String[] lineElements;
             String lineType;
 
-            List<SatelliteEntity> satelliteEntityList = null;
-            List<Coordinates> userCoordinatesList = null;
+            var satelliteEntityList = new List<SatelliteEntity>();
+            var userCoordinatesList = new List<Coordinates>();
 
             foreach (String line in lines)
             {
@@ -30,50 +31,40 @@ namespace SatelliteTracker.Backend
                 }
                 else if (lineType == PositionSentence)
                 {
-                    userCoordinatesList = GetUserCoordinates(lineElements);
-
+                    userCoordinatesList.Add(GetUserCoordinates(lineElements));
                 }
                 else if (lineType == SatelliteSentence)
                 {
-                    satelliteEntityList = GetSatelliteEntities(lineElements);
+                    var index = 4;
+
+                    while (index < lineElements.Length)
+                    {
+                        if (String.IsNullOrEmpty(lineElements[index]))
+                        {
+                            index += 3;
+                        }
+                        else
+                        {
+                            satelliteEntityList.Add(new SatelliteEntity()
+                            {
+                                PRN = lineElements[index++],
+                                Elevation = ParseToInt(lineElements[index++]),
+                                Azimuth = ParseToInt(lineElements[index++]),
+                                SNR = ParseToInt(lineElements[index++])
+                            });
+                        }
+                    }
                 }
             }
 
-            return new KeyValuePair<List<SatelliteEntity>, List<Coordinates>>(
+            return new KeyValuePair<IEnumerable<SatelliteEntity>, IEnumerable<Coordinates>>(
                 satelliteEntityList,
                 userCoordinatesList
                 );
         }
 
-        private static List<SatelliteEntity> GetSatelliteEntities(string[] lineElements)
+        private static Coordinates GetUserCoordinates(String[] lineElements)
         {
-            var satelliteEntityList = new List<SatelliteEntity>();
-            var index = 4;
-
-            while (index < lineElements.Length)
-            {
-                if (String.IsNullOrEmpty(lineElements[index]))
-                {
-                    index += 3;
-                }
-                else
-                {
-                    satelliteEntityList.Add(new SatelliteEntity()
-                    {
-                        PRN = lineElements[index++],
-                        Elevation = ParseToInt(lineElements[index++]),
-                        Azimuth = ParseToInt(lineElements[index++]),
-                        SNR = ParseToInt(lineElements[index++])
-                    });
-                }
-            }
-
-            return satelliteEntityList;
-        }
-
-        private static List<Coordinates> GetUserCoordinates(String[] lineElements)
-        {
-            var coordinates = new List<Coordinates>();
             var index = 2;
 
             var latitude = lineElements[index++];
@@ -81,10 +72,10 @@ namespace SatelliteTracker.Backend
 
             if (!String.IsNullOrEmpty(latitude) && !String.IsNullOrEmpty(longitude))
             {
-                coordinates.Add(FormatToCoordinate(latitude, longitude));
+                return FormatToCoordinate(latitude, longitude);
             }
 
-            return coordinates;
+            throw new FormatException();
         }
 
         private static Coordinates FormatToCoordinate(String latitude, String longitude)

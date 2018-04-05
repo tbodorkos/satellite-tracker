@@ -11,9 +11,9 @@ namespace SatelliteTracker.Backend
         private static String Path = AppDomain.CurrentDomain.BaseDirectory + "UploadedFiles\\";
         private static String Ext = ".nmea";
 
-        public static List<String> Open(String fileName)
+        public static IEnumerable<String> Open(String fileName)
         {
-            return File.ReadAllLines(Path + fileName + Ext).ToList();
+            return File.ReadAllLines(Path + fileName + Ext);
         }
 
         public static void Save(HttpPostedFileBase file)
@@ -21,9 +21,9 @@ namespace SatelliteTracker.Backend
             file.SaveAs(Path + file.FileName);
         }
 
-        public static List<String> GetFileNames()
+        public static IEnumerable<String> GetFileNames()
         {
-            List<String> fileNameList = new List<String>();
+            var fileNameList = new List<String>();
 
             String[] fileNameArray = Directory.GetFiles(Path, "*" + Ext);
 
