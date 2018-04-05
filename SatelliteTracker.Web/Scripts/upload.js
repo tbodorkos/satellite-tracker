@@ -4,6 +4,12 @@
 
 $("#uploadForm").submit(function (e) {
     e.preventDefault();
+
+    if ($(":file")[0].files.length === 0) {
+        swal("No file selected!", "", "error");
+        return;
+    }
+
     var formData = new FormData($(this)[0]);
 
     $.ajax({

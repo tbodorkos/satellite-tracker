@@ -1,5 +1,10 @@
 ﻿$("#selectForm").submit(function (e) {
     e.preventDefault();
+
+    if ($("#fileSelector").val() === null) {
+        swal("No file selected!", "", "error");
+        return;
+    }
     var formData = new FormData($(this)[0]);
 
     $.ajax({
