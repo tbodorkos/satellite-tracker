@@ -29,11 +29,14 @@ $("#uploadForm").submit(function (e) {
 });
 
 function addFileToSelect() {
-    var $fileInput = $(":file"),
+    var $select = $("#fileSelector"),
+        $fileInput = $(":file"),
+        hasValue = false,
         files,
         fileName,
         pointIndex,
         option;
+        
 
     if (typeof $fileInput !== "undefined" && typeof $fileInput[0] !== "undefined") {
         files = $fileInput[0].files;
@@ -42,10 +45,21 @@ function addFileToSelect() {
             pointIndex = fileName.lastIndexOf(".");
             if (pointIndex !== -1) {
                 fileName = fileName.substring(0, pointIndex);
+
+                $select.find("option").each(function () {
+                    if (this.text === fileName) {
+                        hasValue = true;
+                    }
+                });
+
+                if (hasValue) {
+                    return;
+                }
+
                 option = document.createElement('option');
                 option.value = fileName;
                 option.text = fileName;
-                $("#fileSelector")[0].appendChild(option);
+                $select[0].appendChild(option);
             }
         }
     }
