@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-
+using SatelliteTracker.Backend.Types;
 using SatelliteTracker.Backend.Entities;
 
 namespace SatelliteTracker.Backend
 {
+    /// <summary>
+    /// Satellite data provider
+    /// </summary>
     public static class DataProvider
     {
         private static IEnumerable<SatelliteData> Data = new List<SatelliteData>()
@@ -43,17 +46,27 @@ namespace SatelliteTracker.Backend
             new SatelliteData() { PRN = "32", Name = "USA-266", System = SystemType.GPS, Launch = DateTime.Parse("2016-02-05 13:38") },
         };
 
-        public static String GetDataByPRN(String prn)
+        /// <summary>
+        /// Get satellite's data by PRN number
+        /// </summary>
+        /// <param name="prn">PRN number</param>
+        /// <returns>Satellite's data in string</returns>
+        public static string GetDataByPRN(string prn)
         {
             return GetData(prn).ToString();
         }
 
-        public static String GetNameByPRN(String prn)
+        /// <summary>
+        /// Get satellite's name by PRN number
+        /// </summary>
+        /// <param name="prn">PRN number</param>
+        /// <returns>Satellite's name</returns>
+        public static string GetNameByPRN(string prn)
         {
             return GetData(prn).Name;
         }
 
-        private static SatelliteData GetData(String prn)
+        private static SatelliteData GetData(string prn)
         {
             SatelliteData satellite = Data.FirstOrDefault(d => d.PRN.Equals(prn));
 

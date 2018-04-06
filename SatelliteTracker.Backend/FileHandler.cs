@@ -6,30 +6,46 @@ using System.Collections.Generic;
 
 namespace SatelliteTracker.Backend
 {
+    /// <summary>
+    /// File I/O handler
+    /// </summary>
     public static class FileHandler
     {
-        private static String Path = AppDomain.CurrentDomain.BaseDirectory + "UploadedFiles\\";
-        private static String Ext = ".nmea";
+        private static string Path = AppDomain.CurrentDomain.BaseDirectory + "UploadedFiles\\";
+        private static string Ext = ".nmea";
 
-        public static IEnumerable<String> Open(String fileName)
+        /// <summary>
+        /// Open file
+        /// </summary>
+        /// <param name="fileName">File name without extension</param>
+        /// <returns>Lines in file</returns>
+        public static IEnumerable<string> Open(string fileName)
         {
             return File.ReadAllLines(Path + fileName + Ext);
         }
 
+        /// <summary>
+        /// Save file
+        /// </summary>
+        /// <param name="file">Uploaded file</param>
         public static void Save(HttpPostedFileBase file)
         {
             file.SaveAs(Path + file.FileName);
         }
 
-        public static IEnumerable<String> GetFileNames()
+        /// <summary>
+        /// Get file names in UploadedFiles folder
+        /// </summary>
+        /// <returns>File names</returns>
+        public static IEnumerable<string> GetFileNames()
         {
-            var fileNameList = new List<String>();
+            var fileNameList = new List<string>();
 
-            String[] fileNameArray = Directory.GetFiles(Path, "*" + Ext);
+            string[] fileNameArray = Directory.GetFiles(Path, "*" + Ext);
 
-            foreach (String fileName in fileNameArray)
+            foreach (string fileName in fileNameArray)
             {
-                fileNameList.Add(fileName.Split(new String[] { "\\" }, StringSplitOptions.None)
+                fileNameList.Add(fileName.Split(new string[] { "\\" }, StringSplitOptions.None)
                         .Last().Split('.').First());
             }
 

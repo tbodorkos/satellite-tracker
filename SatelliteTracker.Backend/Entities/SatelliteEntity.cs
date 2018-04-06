@@ -1,15 +1,28 @@
-﻿using System;
-
-namespace SatelliteTracker.Backend.Entites
+﻿namespace SatelliteTracker.Backend.Entites
 {
+    /// <summary>
+    /// SatelliteEntity entity
+    /// </summary>
     public class SatelliteEntity
     {
-        public String PRN { get; set; }
+        /// <summary>
+        /// PRN number
+        /// </summary>
+        public string PRN { get; set; }
 
-        public Int32 Elevation { get; set; }
+        /// <summary>
+        /// Elevation degree
+        /// </summary>
+        public int Elevation { get; set; }
 
-        public Int32 Azimuth { get; set; }
+        /// <summary>
+        /// Azimuth degree
+        /// </summary>
+        public int Azimuth { get; set; }
 
-        public Int32 SNR { get; set; }
+        /// <summary>
+        /// SNR number
+        /// </summary>
+        public int SNR { get; set; }
     }
 }

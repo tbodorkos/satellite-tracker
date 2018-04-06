@@ -1,16 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SatelliteTracker.Web.Models
 {
+    /// <summary>
+    /// Satellite data model
+    /// </summary>
     public class SatelliteModel
     {
-        public String Name { get; set; }
+        /// <summary>
+        /// Name
+        /// </summary>
+        public string Name { get; set; }
 
-        public IList<Int32> ElevationList { get; set; }
-        
-        public IList<Int32> AzimuthList { get; set; }
+        /// <summary>
+        /// Elevations
+        /// </summary>
+        public IList<int> ElevationList { get; set; }
 
-        public String Information { get; set; }
+        /// <summary>
+        /// Azimuths
+        /// </summary>
+        public IList<int> AzimuthList { get; set; }
+
+        /// <summary>
+        /// Custom informations
+        /// </summary>
+        public string Information { get; set; }
     }
 }

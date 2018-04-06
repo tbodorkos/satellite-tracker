@@ -4,19 +4,29 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Collections.Generic;
 using SatelliteTracker.Web.Models;
-
 using SatelliteTracker.Backend;
 using SatelliteTracker.Backend.Entites;
 
 namespace SatelliteTracker.Web.Controllers
 {
+    /// <summary>
+    /// Main controller
+    /// </summary>
     public class HomeController : Controller
     {
+        /// <summary>
+        /// Loads Index page
+        /// </summary>
+        /// <returns>Index page</returns>
         public ActionResult Index()
         {
             return View();
         }
 
+        /// <summary>
+        /// Loads Map page
+        /// </summary>
+        /// <returns>Map page</returns>
         [Route("Map")]
         public ActionResult Map()
         {
@@ -28,6 +38,10 @@ namespace SatelliteTracker.Web.Controllers
             return View(mapModel);
         }
 
+        /// <summary>
+        /// Uploads file
+        /// </summary>
+        /// <param name="file">Uploaded file</param>
         [HttpPost]
         [Route("Upload")]
         public ActionResult Upload(HttpPostedFileBase file)
@@ -42,8 +56,13 @@ namespace SatelliteTracker.Web.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Opens selected file by name and creates NMEA Model
+        /// </summary>
+        /// <param name="fileName">Selected file name</param>
+        /// <returns>NMEA Model in JSON</returns>
         [Route("Open")]
-        public ActionResult Open(String fileName)
+        public ActionResult Open(string fileName)
         {
             if (!String.IsNullOrEmpty(fileName))
             {
@@ -64,12 +83,12 @@ namespace SatelliteTracker.Web.Controllers
             return Json("");
         }
 
-        private static Int32 GetFrequency(Int32 count)
+        private static int GetFrequency(int count)
         {
             return (Int32)((double)count / (double)10);
         }
 
-        private IEnumerable<SatelliteModel> GetSatelliteList(IEnumerable<SatelliteEntity> entities, Int32 frequency)
+        private IEnumerable<SatelliteModel> GetSatelliteList(IEnumerable<SatelliteEntity> entities, int frequency)
         {
             var satelliteElevations = entities.GroupBy(
                 p => p.PRN,

@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SatelliteTracker.Web.Models
 {
+    /// <summary>
+    /// Map Model
+    /// </summary>
     public class MapModel
     {
-        public MapModel()
-        {
-        }
-
-        public IEnumerable<String> Files { get; set; }
+        /// <summary>
+        /// File names in UploadedFiles folder
+        /// </summary>
+        public IEnumerable<string> Files { get; set; }
     }
 }

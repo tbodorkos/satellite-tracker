@@ -1,26 +1,33 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-
 using SatelliteTracker.Backend.Entites;
 
 namespace SatelliteTracker.Backend
 {
+    /// <summary>
+    /// NMEA file parser
+    /// </summary>
     public static class NMEAParser
     {
-        private static String SatelliteSentence = "$GPGSV";
-        private static String PositionSentence = "$GPGGA";
+        private static string SatelliteSentence = "$GPGSV";
+        private static string PositionSentence = "$GPGGA";
 
+        /// <summary>
+        /// Parse NMEA lines
+        /// </summary>
+        /// <param name="lines">Lines from an NMEA file</param>
+        /// <returns>A pair of user coordinates and satellite entities</returns>
         public static KeyValuePair<IEnumerable<SatelliteEntity>, IEnumerable<Coordinates>> Parse(
-            IEnumerable<String> lines)
+            IEnumerable<string> lines)
         {
-            String[] lineElements;
-            String lineType;
+            string[] lineElements;
+            string lineType;
 
             var satelliteEntityList = new List<SatelliteEntity>();
             var userCoordinatesList = new List<Coordinates>();
 
-            foreach (String line in lines)
+            foreach (string line in lines)
             {
                 lineElements = line.Split('*').First().Split(',');
                 lineType = lineElements[0];
@@ -63,7 +70,7 @@ namespace SatelliteTracker.Backend
                 );
         }
 
-        private static Coordinates GetUserCoordinates(String[] lineElements)
+        private static Coordinates GetUserCoordinates(string[] lineElements)
         {
             var index = 2;
 
@@ -78,17 +85,17 @@ namespace SatelliteTracker.Backend
             throw new FormatException();
         }
 
-        private static Coordinates FormatToCoordinate(String latitude, String longitude)
+        private static Coordinates FormatToCoordinate(string latitude, string longitude)
         {
             return new Coordinates(
-                new String(latitude.Where(x => Char.IsLetterOrDigit(x)).ToArray()).Insert(2, "."),
-                new String(longitude.Where(x => Char.IsLetterOrDigit(x)).ToArray()).Insert(3, ".")
+                new string(latitude.Where(x => Char.IsLetterOrDigit(x)).ToArray()).Insert(2, "."),
+                new string(longitude.Where(x => Char.IsLetterOrDigit(x)).ToArray()).Insert(3, ".")
                 );
         }
 
-        private static Int32 ParseToInt(String str)
+        private static int ParseToInt(string str)
         {
-            return Int32.TryParse(str, out Int32 num) ? num : -1;
+            return Int32.TryParse(str, out int num) ? num : -1;
         }
     }
 }

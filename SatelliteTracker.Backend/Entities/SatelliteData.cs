@@ -1,33 +1,44 @@
 ﻿using System;
+using SatelliteTracker.Backend.Types;
 
 namespace SatelliteTracker.Backend.Entities
 {
-    public enum SystemType
-    {
-        Unknown,
-        GPS,
-        GLONASS,
-        Galileo,
-        BeiDou
-    }
-
+    /// <summary>
+    /// SatelliteData entity
+    /// </summary>
     public class SatelliteData
     {
-        public String PRN { get; set; }
+        /// <summary>
+        /// PRN number
+        /// </summary>
+        public string PRN { get; set; }
 
-        public String Name { get; set; }
+        /// <summary>
+        /// Name
+        /// </summary>
+        public string Name { get; set; }
 
+        /// <summary>
+        /// System type
+        /// </summary>
         public SystemType System { get; set; }
 
+        /// <summary>
+        /// Launch date
+        /// </summary>
         public DateTime? Launch { get; set; }
 
-        public override String ToString()
+        /// <summary>
+        /// Returns data in string
+        /// </summary>
+        /// <returns>Satellite data in string</returns>
+        public override string ToString()
         {
-            return "System: " + (System == SystemType.Unknown ? "Unknown" : System.ToString())
-                + "<br />"
-                + "PRN number: " + PRN
-                + "<br />"
-                + "Launch date: " + (Launch.HasValue ? Launch.Value.ToString("yyyy.MM.dd HH:mm") : "Unknown");
+            return $@"System: {(System == SystemType.Unknown ? "Unknown" : System.ToString())}
+                    <br />
+                    PRN number: {PRN}
+                    <br />
+                    Launch date: {(Launch.HasValue ? Launch.Value.ToString("yyyy.MM.dd HH:mm") : "Unknown")}";
         }
     }
 }
