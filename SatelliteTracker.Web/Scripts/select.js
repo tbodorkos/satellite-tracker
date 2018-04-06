@@ -15,6 +15,7 @@
         contentType: false,
         processData: false,
         success: function (model) {
+            $("#selectCollapseButton").click();
             drawOnMap(model);
         },
         error: function () {
