@@ -1,6 +1,6 @@
 ﻿var colors = ['blue', 'fuchsia', 'gray', 'lime',
     'maroon', 'navy', 'olive', 'orange', 'purple', 'red',
-    'silver', 'teal', 'white', 'yellow'];
+    'silver', 'teal', 'yellow'];
 
 var map = new ol.Map({
     layers: [new ol.layer.Tile({
@@ -39,7 +39,10 @@ map.on(['pointermove', 'singleclick'], function (evt) {
 function drawOnMap(model) {
     var i = 0,
         userCoordinates = model.UserCoordinatesList,
-        satellites = model.SatelliteList;
+        satellites = model.SatelliteList,
+        frequency = 5,
+        jump = getJump(frequency, userCoordinates.length),
+        userColor = colors[0];
 
     if (userCoordinates.length === 0 || satellites.length === 0) {
         return;
@@ -48,39 +51,52 @@ function drawOnMap(model) {
     document.getElementById("satelliteList").innerHTML = "";
     $("#zeroSatellite").hide();
 
-    drawUserCoordinates(userCoordinates, colors[0]);
+    drawUserCoordinates(userCoordinates, userColor, jump);
+    document.getElementById("satelliteList").innerHTML +=
+        "<li style='color: " + userColor + "'><span class='pointer c-black'>User route</span><span class='c-black opacity-half ml-5'>(" + userColor + ")</span></li><br />";
 
-    for (i; i < satellites.length; ++i) {
+    while (i < satellites.length) {
         var satellite = satellites[i],
-            color = colors[i + 1],
+            color = colors[++i],
             name_id = satellite.Name.replace(/_/g, " ");
 
-        drawSatellite(userCoordinates, satellite, color);
+        drawSatellite(userCoordinates, satellite, color, jump);
         document.getElementById("satelliteList").innerHTML +=
             "<li style='color: " + color + "'><span onmouseover='showSatelliteData(\"" + name_id + "\")'" +
-            "onmouseout='hideSatelliteData(\"" + name_id + "\")' class='pointer c-black underline'>" + satellite.Name + "</span>" +
+        "onmouseout='hideSatelliteData(\"" + name_id + "\")' class='pointer c-black underline'>" + satellite.Name + "</span> <span class='c-black opacity-half ml-5' style='opacity: 0.5'>(" + color + ")</span>" +
             "<div id='" + name_id + "' class='satelliteContent c-black d-none mt-5 ml-10 mb-10 size-13'>" + satellite.Information + "</div></li>";
     }
 
     setMapCenter(userCoordinates[0]);
 }
 
-function drawUserCoordinates(coordinates, color) {
-    var points = [],
-        index = 0;
+function getJump(frequency, count) {
+    if (frequency > count) {
+        frequency = 1;
+    }
 
-    for (index; index < coordinates.length; ++index) {
-        points[index] = [coordinates[index].Longitude, coordinates[index].Latitude];
+    return Math.floor(count / frequency);
+}
+
+function drawUserCoordinates(coordinates, color, jump) {
+    var points = [],
+        index = 0,
+        jumpIndex = 0;
+
+    while (jumpIndex < coordinates.length) {
+        points[index++] = [coordinates[jumpIndex].Longitude, coordinates[jumpIndex].Latitude];
+        jumpIndex += jump;
     }
 
     addLayerToMap(points, "User route", color);
 }
 
-function drawSatellite(coordinates, satellite, color) {
+function drawSatellite(coordinates, satellite, color, jump) {
     var elevations = satellite.ElevationList,
         azimuths = satellite.AzimuthList,
         points = [],
         index = 0,
+        jumpIndex = 0,
         distance,
         dx,
         dy,
@@ -89,18 +105,19 @@ function drawSatellite(coordinates, satellite, color) {
         final_longitude,
         final_latitude;
 
-    for (index; index < elevations.length; ++index) {
-        distance = getDistance(elevations[index], 22000);
-        azimuth = azimuths[index];
+    while (jumpIndex < elevations.length) {
+        distance = getDistance(elevations[jumpIndex], 22000);
+        azimuth = azimuths[jumpIndex];
         dx = distance * Math.sin(toRadian(azimuth));
         dy = distance * Math.cos(toRadian(azimuth));
-        console.log(index);
-        delta_longitude = dx / (111320 * Math.cos(coordinates[index].Latitude));
+        delta_longitude = dx / (111320 * Math.cos(coordinates[jumpIndex].Latitude));
         delta_latitude = dy / 110540;
-        final_longitude = coordinates[index].Longitude + delta_longitude;
-        final_latitude = coordinates[index].Latitude + delta_latitude;
+        final_longitude = coordinates[jumpIndex].Longitude + delta_longitude;
+        final_latitude = coordinates[jumpIndex].Latitude + delta_latitude;
 
-        points[index] = [final_longitude, final_latitude];
+        points[index++] = [final_longitude, final_latitude];
+
+        jumpIndex += jump;
     }
 
     addLayerToMap(points, satellite.Name, color);
@@ -137,11 +154,11 @@ function addLayerToMap(points, name, color) {
     };
 
     var curved = turf.bezier(line);
-    curved.properties = { stroke: color };
+    curved.properties = { stroke: color, name: name };
 
     var geojsonObject = {
         "type": "FeatureCollection",
-        "features": [line, curved]
+        "features": [curved]
     };
     var vectorSource = new ol.source.Vector({
         features: (new ol.format.GeoJSON()).readFeatures(geojsonObject,
@@ -154,7 +171,7 @@ function addLayerToMap(points, name, color) {
         styles[featureColor] = new ol.style.Style({
             stroke: new ol.style.Stroke({
                 color: featureColor,
-                width: 3
+                width: 4
             })
         });
         return styles[featureColor];

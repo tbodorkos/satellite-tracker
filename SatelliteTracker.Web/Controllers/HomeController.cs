@@ -69,12 +69,11 @@ namespace SatelliteTracker.Web.Controllers
                 var lines = FileHandler.Open(fileName);
 
                 var entityList = NMEAParser.Parse(lines);
-                var frequency = GetFrequency(entityList.Value.ToList().Count);
 
                 NMEAModel model = new NMEAModel
                 {
-                    UserCoordinatesList = entityList.Value.Where((x, i) => i % frequency == 0),
-                    SatelliteList = GetSatelliteList(entityList.Key, frequency),
+                    UserCoordinatesList = entityList.Value.ToList(),
+                    SatelliteList = GetSatelliteList(entityList.Key).ToList(),
                 };
 
                 return Json(model);
@@ -83,12 +82,7 @@ namespace SatelliteTracker.Web.Controllers
             return Json("");
         }
 
-        private static int GetFrequency(int count)
-        {
-            return (Int32)((double)count / (double)10);
-        }
-
-        private IEnumerable<SatelliteModel> GetSatelliteList(IEnumerable<SatelliteEntity> entities, int frequency)
+        private IEnumerable<SatelliteModel> GetSatelliteList(IEnumerable<SatelliteEntity> entities)
         {
             var satelliteElevations = entities.GroupBy(
                 p => p.PRN,
@@ -106,9 +100,8 @@ namespace SatelliteTracker.Web.Controllers
                 result.Add(new SatelliteModel()
                 {
                     Name = DataProvider.GetNameByPRN(satelliteElevation.PRN),
-                    ElevationList = satelliteElevation.ElevationList.Where((x, i) => i % frequency == 0).ToList(),
-                    AzimuthList = satelliteAzimuths.FirstOrDefault(a => a.PRN == satelliteElevation.PRN).
-                        AzimuthList.Where((x, i) => i % frequency == 0).ToList(),
+                    ElevationList = satelliteElevation.ElevationList,
+                    AzimuthList = satelliteAzimuths.FirstOrDefault(a => a.PRN == satelliteElevation.PRN).AzimuthList,
                     Information = DataProvider.GetDataByPRN(satelliteElevation.PRN)
                 });
             }

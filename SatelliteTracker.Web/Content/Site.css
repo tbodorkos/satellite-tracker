@@ -72,8 +72,16 @@ textarea {
     margin-right: -5px;
 }
 
+.ml-5 {
+    margin-left: 5px;
+}
+
 .ml-10 {
     margin-left: 10px;
+}
+
+.opacity-half {
+    opacity: 0.5;
 }
 
 .pointer {
