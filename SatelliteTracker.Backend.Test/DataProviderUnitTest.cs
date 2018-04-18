@@ -12,7 +12,11 @@ namespace SatelliteTracker.Backend.Test
             string result = DataProvider.GetDataByPRN(testPrn);
 
             Assert.AreEqual(
-                "System: Unknown<br />PRN number: 00<br />Launch date: Unknown",
+                $@"System: Unknown
+                    <br />
+                    PRN number: 00
+                    <br />
+                    Launch date: Unknown",
                 result
                 );
         }
@@ -24,7 +28,11 @@ namespace SatelliteTracker.Backend.Test
             string result = DataProvider.GetDataByPRN(testPrn);
 
             Assert.AreEqual(
-                "System: GPS<br />PRN number: 01<br />Launch date: 2011.07.16 06:41",
+                $@"System: GPS
+                    <br />
+                    PRN number: 01
+                    <br />
+                    Launch date: 2011.07.16 06:41",
                 result
                 );
         }
