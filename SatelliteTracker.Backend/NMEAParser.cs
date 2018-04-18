@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using SatelliteTracker.Backend.Entites;
+using System.Globalization;
 
 namespace SatelliteTracker.Backend
 {
@@ -75,27 +76,46 @@ namespace SatelliteTracker.Backend
             var index = 2;
 
             var latitude = lineElements[index++];
-            var longitude = lineElements[++index];
+            var isNegativeLat = lineElements[index++] == "S";
+            var longitude = lineElements[index++];
+            var isNegativeLon = lineElements[index] == "W";
 
             if (!String.IsNullOrEmpty(latitude) && !String.IsNullOrEmpty(longitude))
             {
-                return FormatToCoordinate(latitude, longitude);
+                return FormatToCoordinate(latitude, longitude, isNegativeLat, isNegativeLon);
             }
 
             throw new FormatException();
         }
 
-        private static Coordinates FormatToCoordinate(string latitude, string longitude)
+        private static Coordinates FormatToCoordinate(string latitude, string longitude,
+            bool isNegativeLat, bool isNegativeLon)
         {
-            return new Coordinates(
-                new string(latitude.Where(x => Char.IsLetterOrDigit(x)).ToArray()).Insert(2, "."),
-                new string(longitude.Where(x => Char.IsLetterOrDigit(x)).ToArray()).Insert(3, ".")
-                );
+            double latDeg = ParseToDouble(String.Concat(latitude[0], latitude[1]));
+            double latMin = ParseToDouble(latitude.Substring(2));
+
+            double lonDeg = ParseToDouble(String.Concat(longitude[0], longitude[1], longitude[2]));
+            double lonMin = ParseToDouble(longitude.Substring(3));
+
+            var resultLat = (latDeg + latMin / 60) * (isNegativeLat ? -1 : 1);
+            var resultLon = (lonDeg + lonMin / 60) * (isNegativeLon ? -1 : 1);
+
+            return new Coordinates()
+            {
+                Latitude = resultLat,
+                Longitude = resultLon
+            };
         }
 
         private static int ParseToInt(string str)
         {
             return Int32.TryParse(str, out int num) ? num : -1;
+        }
+
+        private static double ParseToDouble(string str)
+        {
+            return Double.TryParse(str, style: NumberStyles.Number,
+                provider: CultureInfo.InvariantCulture, result: out double result) ? result : 200;
         }
     }
 }
